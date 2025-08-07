@@ -25,3 +25,11 @@ __pycache__/
 *.log
 coverage/
 *.cover
+
+# Node.js Frontend
+frontend/node_modules/
+frontend/public/css/style.css
+frontend/.env
+
+# API server
+api/__pycache__/
