@@ -1,0 +1,37 @@
+{
+  "name": "homecourt-ai-frontend",
+  "version": "1.0.0",
+  "description": "Modern Node.js frontend for HomeCourt AI NBA prediction platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build-css": "npx tailwindcss -i ./src/styles/main.css -o ./public/css/style.css --watch",
+    "build-css-prod": "npx tailwindcss -i ./src/styles/main.css -o ./public/css/style.css --minify",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nba",
+    "prediction",
+    "basketball",
+    "machine-learning",
+    "express",
+    "tailwind"
+  ],
+  "author": "Ayaan Baig",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.11.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "nodemon": "^3.1.10",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.0"
+  }
+}
