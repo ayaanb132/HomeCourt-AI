@@ -11,7 +11,7 @@
 [![Accuracy](https://img.shields.io/badge/Model_Accuracy-60.1%25-brightgreen.svg)](#model-performance)
 [![Data Coverage](https://img.shields.io/badge/Historical_Data-75%2B_Years-purple.svg)](#data-scope)
 
-HomeCourt AI is a production‑oriented machine learning system that predicts NBA game outcomes using 75+ years of professional basketball data. The platform combines a robust Python ML pipeline, a typed REST API layer, and a modern Node.js frontend for a polished, enterprise‑grade experience.
+HomeCourt AI is a production‑oriented machine learning system that predicts NBA game outcomes using 75+ years of professional basketball data. The platform combines a robust Python ML pipeline, a ty[...]
 
 - Mission: Democratize sports analytics through reliable, interpretable ML and fast product surfaces
 - Impact: Processes 7,900+ historical matchups; delivers actionable win‑probability insights for analysts, platforms, and fans
@@ -36,11 +36,11 @@ graph LR
     A[Raw NBA Data] --> B[Data Cleaning]
     B --> C[Feature Engineering]
     C --> D[Game Simulation]
-    D --> E[Model Training (scikit-learn)]
-    E --> F[Python API (Flask)]
-    F --> G[Node/Express Frontend]
-    E --> H[Streamlit App]
-    G --> I[End Users]
+    D --> E["Model Training (scikit-learn)"]
+    E --> F["Python API (Flask)"]
+    F --> G["Node/Express Frontend"]
+    E --> H["Streamlit App"]
+    G --> I["End Users"]
     H --> I
 ```
 
