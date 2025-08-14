@@ -6,7 +6,6 @@
 [![Flask](https://img.shields.io/badge/Flask-API-000.svg?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
 [![Express](https://img.shields.io/badge/Express.js-Backend-000.svg?logo=express&logoColor=white)](https://expressjs.com/)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.x-06B6D4.svg?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-Interactive_App-FF4B4B.svg?logo=streamlit&logoColor=white)](https://streamlit.io)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Accuracy](https://img.shields.io/badge/Model_Accuracy-60.1%25-brightgreen.svg)](#model-performance)
 [![Data Coverage](https://img.shields.io/badge/Historical_Data-75%2B_Years-purple.svg)](#data-scope)
@@ -15,7 +14,7 @@ HomeCourt AI is a production‑oriented machine learning system that predicts NB
 
 - Mission: Democratize sports analytics through reliable, interpretable ML and fast product surfaces
 - Impact: Processes 7,900+ historical matchups; delivers actionable win‑probability insights for analysts, platforms, and fans
-- New: Full‑stack web experience — modern Node/Express frontend + Python ML API, alongside an interactive Streamlit app
+- Architecture: Full‑stack web experience — modern Node/Express frontend + Python ML API
 
 ---
 
@@ -25,7 +24,6 @@ HomeCourt AI is a production‑oriented machine learning system that predicts NB
 - Data coverage from 1947–2025 (79 seasons)
 - Real‑time predictions via REST API with caching and robust error handling
 - Modern, responsive frontend (Node.js + Express + Tailwind) with accessibility and performance best practices
-- Interactive Streamlit app for rapid exploration, visualizations, and live predictions
 
 ---
 
@@ -39,33 +37,16 @@ graph LR
     D --> E["Model Training (scikit-learn)"]
     E --> F["Python API (Flask)"]
     F --> G["Node/Express Frontend"]
-    E --> H["Streamlit App"]
-    G --> I["End Users"]
-    H --> I
+    G --> H["End Users"]
 ```
 
 - Core ML (Python): Data preparation, feature engineering, model training, metrics
 - API (Flask): Serves prediction, teams, and model stats endpoints
 - Frontend (Node/Express + Tailwind): Responsive UI, prediction workflows, dashboards
-- Streamlit: Exploratory interface with metrics, confusion matrices, and feature importance
 
 ---
 
 ## Product Surfaces
-
-### Streamlit App
-- Welcome dashboard with project overview
-- Model performance analytics (confusion matrix, reports, feature importance)
-- Live prediction engine with instant win probabilities
-- Cached model training using `@st.cache_resource`
-
-Live Demo: https://homecourtai.streamlit.app
-
-Local:
-```bash
-pip install streamlit
-streamlit run app.py
-```
 
 ### Frontend (Node.js + Express)
 - Modern, responsive UI with NBA‑themed design (Tailwind CSS)
@@ -101,7 +82,6 @@ python api/app.py
 
 ### Visualization & Reporting
 - Confusion matrix heatmaps, classification reports, feature importance
-- Streamlit dashboards for exploration
 - Frontend dashboards for model stats and prediction confidence
 
 ---
@@ -186,7 +166,6 @@ HomeCourt-AI/
 │   ├── Team Totals.csv
 │   └── Player Totals.csv
 ├── main.py                   # ML pipeline & training
-├── app.py                    # Streamlit web application
 ├── api/                      # Python Flask API server
 │   └── app.py
 ├── frontend/                 # Node.js + Express + Tailwind UI
@@ -239,12 +218,6 @@ npm run build-css-prod
 npm run dev  # open http://localhost:3000
 ```
 
-Streamlit App
-```bash
-cd ..
-streamlit run app.py
-```
-
 Expected Console Output (ML)
 ```
 ✅ Dataset loaded: 1,876 team seasons processed
@@ -262,7 +235,7 @@ Expected Console Output (ML)
 - Enhanced feature engineering (injuries, travel fatigue, head‑to‑head, L10 form)
 - Production API scaling (caching, rate limiting, auth, documentation)
 - Advanced deep learning (LSTM, Transformers, GNNs), RL experimentation
-- Streamlit and frontend enhancements (Plotly, mobile responsiveness, personalization)
+- Frontend enhancements (Plotly, mobile responsiveness, personalization)
 
 ---
 
