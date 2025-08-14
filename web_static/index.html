@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeCourt AI - NBA Game Prediction Platform</title>
+    <meta name="description" content="Advanced NBA game outcome prediction using machine learning. Get real-time predictions with 58.5% accuracy.">
+    <meta name="keywords" content="NBA, basketball, prediction, machine learning, sports analytics">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏀%3C/text%3E%3C/svg%3E">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link href="/css/style.css" rel="stylesheet">
+    
+    <!-- Theme Script (to prevent flash of unstyled content) -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</head>
+<body class="antialiased">
+    <!-- Loading Spinner -->
+    <div id="loading" class="fixed inset-0 bg-white dark:bg-gray-900 flex items-center justify-center z-50">
+        <div class="text-center">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-nba-blue"></div>
+            <p class="mt-4 text-gray-600 dark:text-gray-400">Loading HomeCourt AI...</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-40 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl">🏀</span>
+                    <span class="font-display font-bold text-xl text-gray-900 dark:text-white">HomeCourt AI</span>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="text-gray-700 dark:text-gray-300 hover:text-nba-blue dark:hover:text-blue-400 transition-colors duration-200">Home</a>
+                    <a href="#predict" class="text-gray-700 dark:text-gray-300 hover:text-nba-blue dark:hover:text-blue-400 transition-colors duration-200">Predict</a>
+                    <a href="#performance" class="text-gray-700 dark:text-gray-300 hover:text-nba-blue dark:hover:text-blue-400 transition-colors duration-200">Performance</a>
+                    <a href="#about" class="text-gray-700 dark:text-gray-300 hover:text-nba-blue dark:hover:text-blue-400 transition-colors duration-200">About</a>
+                </div>
+                
+                <!-- Theme Toggle & Mobile Menu -->
+                <div class="flex items-center space-x-4">
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200" aria-label="Toggle theme">
+                        <svg id="theme-icon-light" class="w-5 h-5 hidden dark:block" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                        </svg>
+                        <svg id="theme-icon-dark" class="w-5 h-5 block dark:hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                        </svg>
+                    </button>
+                    
+                    <button id="mobile-menu-toggle" class="md:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400" aria-label="Toggle menu">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+            <div class="px-4 py-2 space-y-1">
+                <a href="#home" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">Home</a>
+                <a href="#predict" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">Predict</a>
+                <a href="#performance" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">Performance</a>
+                <a href="#about" class="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-16">
+        <!-- Hero Section -->
+        <section id="home" class="relative min-h-screen flex items-center">
+            <!-- Background Pattern -->
+            <div class="absolute inset-0 bg-gradient-to-br from-nba-blue/5 to-court-orange/5 dark:from-nba-blue/10 dark:to-court-orange/10"></div>
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="1"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+            
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+                <div class="text-center">
+                    <!-- Hero Content -->
+                    <div class="mb-8">
+                        <span class="text-6xl md:text-8xl mb-4 block">🏀</span>
+                        <h1 class="font-display font-bold text-4xl md:text-6xl lg:text-7xl text-gray-900 dark:text-white mb-6">
+                            HomeCourt <span class="text-transparent bg-clip-text bg-gradient-to-r from-nba-blue to-court-orange">AI</span>
+                        </h1>
+                        <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+                            Advanced NBA game outcome prediction using machine learning. 
+                            <span class="font-semibold text-nba-blue dark:text-blue-400">58.5% accuracy</span> 
+                            across 75+ years of basketball data.
+                        </p>
+                    </div>
+                    
+                    <!-- Key Statistics -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+                        <div class="stat-card">
+                            <div class="text-3xl font-bold">58.5%</div>
+                            <div class="text-sm opacity-90">Model Accuracy</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="text-3xl font-bold">7,900</div>
+                            <div class="text-sm opacity-90">Games Analyzed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="text-3xl font-bold">75+</div>
+                            <div class="text-sm opacity-90">Years of Data</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="text-3xl font-bold">30</div>
+                            <div class="text-sm opacity-90">NBA Teams</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Call to Action -->
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="#predict" class="btn-primary text-lg px-8 py-4 inline-flex items-center space-x-2">
+                            <span>Make Prediction</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </a>
+                        <a href="#performance" class="btn-secondary text-lg px-8 py-4 inline-flex items-center space-x-2">
+                            <span>View Performance</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prediction Interface -->
+        <section id="predict" class="py-20 bg-gray-50 dark:bg-gray-800/50">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="font-display font-bold text-3xl md:text-4xl text-gray-900 dark:text-white mb-4">
+                        🔮 Make a Prediction
+                    </h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300">
+                        Select two NBA teams to get an instant prediction with confidence analysis
+                    </p>
+                </div>
+                
+                <div class="card max-w-2xl mx-auto">
+                    <form id="prediction-form" class="space-y-6">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <!-- Home Team Selection -->
+                            <div>
+                                <label for="home-team" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Home Team
+                                </label>
+                                <select id="home-team" class="input-field" required>
+                                    <option value="">Select home team...</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Away Team Selection -->
+                            <div>
+                                <label for="away-team" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Away Team
+                                </label>
+                                <select id="away-team" class="input-field" required>
+                                    <option value="">Select away team...</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn-primary text-lg px-8 py-4 inline-flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span id="predict-button-text">Predict Outcome</span>
+                                <svg id="predict-button-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                                <div id="predict-button-spinner" class="hidden animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Error Message -->
+                    <div id="prediction-error" class="hidden mt-6 p-4 bg-red-100 dark:bg-red-900/50 border border-red-300 dark:border-red-700 rounded-lg">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-red-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span id="prediction-error-text" class="text-red-700 dark:text-red-300"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Prediction Results -->
+                <div id="prediction-results" class="hidden mt-8 max-w-3xl mx-auto">
+                    <div class="prediction-card">
+                        <div class="text-center mb-6">
+                            <h3 class="font-display font-bold text-2xl mb-2">Prediction Result</h3>
+                            <div id="predicted-winner" class="text-3xl font-bold"></div>
+                            <div id="prediction-subtitle" class="text-lg opacity-90"></div>
+                        </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <!-- Win Probabilities -->
+                            <div class="bg-white/10 rounded-lg p-4">
+                                <h4 class="font-semibold mb-3">Win Probabilities</h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <div class="flex justify-between text-sm mb-1">
+                                            <span id="home-team-name"></span>
+                                            <span id="home-win-percent"></span>
+                                        </div>
+                                        <div class="w-full bg-white/20 rounded-full h-2">
+                                            <div id="home-win-bar" class="bg-white rounded-full h-2 transition-all duration-1000"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-sm mb-1">
+                                            <span id="away-team-name"></span>
+                                            <span id="away-win-percent"></span>
+                                        </div>
+                                        <div class="w-full bg-white/20 rounded-full h-2">
+                                            <div id="away-win-bar" class="bg-white rounded-full h-2 transition-all duration-1000"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Key Factors -->
+                            <div class="bg-white/10 rounded-lg p-4">
+                                <h4 class="font-semibold mb-3">Key Factors</h4>
+                                <div id="prediction-factors" class="space-y-2 text-sm">
+                                    <!-- Factors will be populated by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 text-center">
+                            <div class="inline-flex items-center space-x-2 text-sm opacity-75">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span>Confidence: <span id="prediction-confidence"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Model Performance -->
+        <section id="performance" class="py-20">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="font-display font-bold text-3xl md:text-4xl text-gray-900 dark:text-white mb-4">
+                        📊 Model Performance
+                    </h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300">
+                        Deep dive into our machine learning model's accuracy and insights
+                    </p>
+                </div>
+                
+                <!-- Performance Metrics -->
+                <div class="grid md:grid-cols-4 gap-6 mb-12">
+                    <div class="card text-center">
+                        <div class="text-3xl font-bold text-nba-blue dark:text-blue-400 mb-2" id="accuracy-metric">-</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">Accuracy</div>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-3xl font-bold text-green-600 dark:text-green-400 mb-2" id="precision-metric">-</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">Precision</div>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-2" id="recall-metric">-</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">Recall</div>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-3xl font-bold text-court-orange mb-2" id="f1-metric">-</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">F1-Score</div>
+                    </div>
+                </div>
+                
+                <!-- Feature Importance -->
+                <div class="card">
+                    <h3 class="font-display font-bold text-xl text-gray-900 dark:text-white mb-6">
+                        Feature Importance
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                        These factors have the greatest impact on our model's predictions:
+                    </p>
+                    <div id="feature-importance-chart" class="space-y-4">
+                        <!-- Feature importance bars will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 bg-gray-50 dark:bg-gray-800/50">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="font-display font-bold text-3xl md:text-4xl text-gray-900 dark:text-white mb-4">
+                        About HomeCourt AI
+                    </h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300">
+                        Democratizing sports analytics through cutting-edge machine learning
+                    </p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="card">
+                        <h3 class="font-display font-bold text-xl text-gray-900 dark:text-white mb-4">
+                            🎯 Our Mission
+                        </h3>
+                        <p class="text-gray-600 dark:text-gray-300">
+                            To provide accessible, accurate NBA game predictions using advanced statistical modeling and machine learning. We analyze 75+ years of professional basketball data to deliver actionable insights for sports analysts, betting platforms, and NBA enthusiasts.
+                        </p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="font-display font-bold text-xl text-gray-900 dark:text-white mb-4">
+                            🔬 Technology Stack
+                        </h3>
+                        <ul class="text-gray-600 dark:text-gray-300 space-y-2">
+                            <li>• <strong>Frontend:</strong> Node.js, Express.js, Tailwind CSS</li>
+                            <li>• <strong>ML Backend:</strong> Python, scikit-learn, pandas</li>
+                            <li>• <strong>Model:</strong> Logistic Regression with feature engineering</li>
+                            <li>• <strong>Data:</strong> 79 seasons of NBA historical data</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card md:col-span-2">
+                        <h3 class="font-display font-bold text-xl text-gray-900 dark:text-white mb-4">
+                            📈 Key Achievements
+                        </h3>
+                        <div class="grid md:grid-cols-3 gap-4 text-center">
+                            <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="text-2xl font-bold text-nba-blue dark:text-blue-400">58.5%</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Prediction Accuracy</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-500 mt-1">Outperforms random baseline by 17%</div>
+                            </div>
+                            <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="text-2xl font-bold text-green-600 dark:text-green-400">7,900</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Games Processed</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-500 mt-1">Real-time processing capability</div>
+                            </div>
+                            <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">75+</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Years of Data</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-500 mt-1">Comprehensive historical analysis</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 dark:bg-gray-950 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-3 mb-4">
+                    <span class="text-3xl">🏀</span>
+                    <span class="font-display font-bold text-2xl">HomeCourt AI</span>
+                </div>
+                <p class="text-gray-400 mb-6">
+                    Advanced NBA game prediction platform built with ❤️ by Ayaan Baig
+                </p>
+                <div class="flex justify-center space-x-6 text-gray-400">
+                    <a href="https://github.com/ayaanb132/HomeCourt-AI" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors duration-200">
+                        GitHub
+                    </a>
+                    <a href="https://linkedin.com/in/ayaan-baig-a97513291/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors duration-200">
+                        LinkedIn
+                    </a>
+                    <a href="mailto:ayaanb132@gmail.com" class="hover:text-white transition-colors duration-200">
+                        Contact
+                    </a>
+                </div>
+                <div class="mt-6 pt-6 border-t border-gray-800 text-sm text-gray-500">
+                    <p>&copy; 2025 HomeCourt AI. MIT License. NBA data courtesy of publicly available datasets.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="/js/app.js"></script>
+</body>
+</html>

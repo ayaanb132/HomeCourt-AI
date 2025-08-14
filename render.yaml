@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: homecourt-ai
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements-prod.txt
+    startCommand: gunicorn api.app:app -k gthread -w 1 -b 0.0.0.0:$PORT --threads 4
+    autoDeploy: true
+    healthCheckPath: /health
